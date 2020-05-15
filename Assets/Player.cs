@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
@@ -9,21 +10,26 @@ public class Player : MonoBehaviour
 
     public Animator animator;
 
+    public SpriteRenderer spriteRenderer;
+
     public float moveSpeed;
     public Weapon weapon;
     public Health healthObject;
-    private float health = 1f;
+    private float health = 3f;
+    private bool invuln = false;
+    private int invulnTimer = 50;
 
     // Update is called once per frame
     void Update()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
-        
     }
 
     private void FixedUpdate()
     {
+        doInvuln();
+
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
@@ -40,28 +46,60 @@ public class Player : MonoBehaviour
             animator.SetBool("wasLeft", true);
         }
     }
-    
+
+    private void doInvuln()
+    {
+        if (invulnTimer == 0 && invuln)
+        {
+            invuln = false;
+            invulnTimer = 50;
+            spriteRenderer.enabled = true;
+        }
+        else if (invuln)
+        {
+            if (invulnTimer % 10 == 0)
+            {
+                spriteRenderer.enabled = !spriteRenderer.enabled;
+            }
+
+            invulnTimer -= 1;
+        }
+    }
+
     /// <summary>
     /// Sent when another object enters a trigger collider attached to this
     /// object (2D physics only).
     /// </summary>
     /// <param name="other">The other Collider2D involved in this collision.</param>
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.tag == "Trap")
+        if (!invuln)
         {
-            health -= 0.5f;
-
-            switch(health)
+            if (other.gameObject.tag == "Trap")
             {
-                case 0.5f:
-                    healthObject.spriteRenderer.sprite = healthObject.hearts[1];
-                    break;
-                case 0f:
-                    healthObject.spriteRenderer.sprite = healthObject.hearts[2];
-                    SceneManager.LoadScene("Dungeon");
-                    break;
+                doHealth();
+                invuln = true;
             }
+        }
+
+    }
+
+    void doHealth()
+    {
+        health -= 0.5f;
+
+        if (health == 0)
+            SceneManager.LoadScene("Dungeon");
+
+        int checkHealth = (int)health;
+
+        if (health - checkHealth == 0.5)
+        {
+            healthObject.hearts[checkHealth].sprite = healthObject.heartSprites[1];
+        }
+        else
+        {
+            healthObject.hearts[checkHealth].sprite = healthObject.heartSprites[2];
         }
     }
 }
