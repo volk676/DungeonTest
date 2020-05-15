@@ -8982,5 +8982,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingZ: 330
   endingZ: 190
-  attackSpeed: 15
+  attackSpeed: -10
   isAttacking: 0
