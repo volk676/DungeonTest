@@ -94,7 +94,7 @@ public class Player : MonoBehaviour
     {
         if (!invuln)
         {
-            if (other.gameObject.tag == "Trap")
+            if (other.gameObject.tag == "Trap" && other.gameObject.GetComponent<SpikeTrap>().frame > 1)
             {
                 doHealth();
                 invuln = true;
