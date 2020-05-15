@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     private float health = 3f;
     private bool invuln = false;
     private int invulnTimer = 50;
+    private int damageTimer = 25;
 
     // Update is called once per frame
     void Update()
@@ -29,6 +30,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         doInvuln();
+        doDamageAnim();
 
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
         animator.SetFloat("Horizontal", movement.x);
@@ -44,6 +46,19 @@ public class Player : MonoBehaviour
         {
             animator.SetBool("wasRight", false);
             animator.SetBool("wasLeft", true);
+        }
+    }
+
+    private void doDamageAnim()
+    {
+        if (damageTimer == 0)
+        {
+            animator.SetBool("damaged", false);
+            damageTimer = 25;
+        }
+        else
+        {
+            damageTimer--;
         }
     }
 
@@ -79,6 +94,7 @@ public class Player : MonoBehaviour
             {
                 doHealth();
                 invuln = true;
+                animator.SetBool("damaged", true);
             }
         }
 
