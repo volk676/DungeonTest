@@ -19,7 +19,7 @@ public class CameraMovement : MonoBehaviour
     /// LateUpdate is called every frame, if the Behaviour is enabled.
     /// It is called after all Update functions have been called.
     /// </summary>
-    void LateUpdate()
+    void FixedUpdate()
     {
         if (transform.position != target.position)
         {
