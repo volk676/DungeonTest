@@ -17,7 +17,8 @@ public class Weapon : MonoBehaviour
     private bool rightFacing = true;
     private bool leftFacing = false;
 
-    public bool isAttacking = false;
+    private bool isAttacking = false;
+    public SpriteRenderer spriteRenderer;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -63,7 +64,6 @@ public class Weapon : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.X) && isAttacking == false)
             isAttacking = true;
-        Debug.Log(transform.eulerAngles.z);
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -9,8 +10,9 @@ public class Player : MonoBehaviour
     public Animator animator;
 
     public float moveSpeed;
-    public bool rightFacing = true;
-    public bool leftFacing = false;
+    public Weapon weapon;
+    public Health healthObject;
+    private float health = 1f;
 
     // Update is called once per frame
     void Update()
@@ -31,15 +33,35 @@ public class Player : MonoBehaviour
         {
             animator.SetBool("wasRight", true);
             animator.SetBool("wasLeft", false);
-            rightFacing = true;
-            leftFacing = false;
         }
         else if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Run_Left")
         {
             animator.SetBool("wasRight", false);
             animator.SetBool("wasLeft", true);
-            rightFacing = true;
-            leftFacing = false;
+        }
+    }
+    
+    /// <summary>
+    /// Sent when another object enters a trigger collider attached to this
+    /// object (2D physics only).
+    /// </summary>
+    /// <param name="other">The other Collider2D involved in this collision.</param>
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Trap")
+        {
+            health -= 0.5f;
+
+            switch(health)
+            {
+                case 0.5f:
+                    healthObject.spriteRenderer.sprite = healthObject.hearts[1];
+                    break;
+                case 0f:
+                    healthObject.spriteRenderer.sprite = healthObject.hearts[2];
+                    SceneManager.LoadScene("Dungeon");
+                    break;
+            }
         }
     }
 }
