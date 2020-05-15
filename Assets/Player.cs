@@ -35,14 +35,18 @@ public class Player : MonoBehaviour
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
-        animator.SetFloat("Magnitude", movement.magnitude);
 
-        if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Run_Right")
+        if (movement.x != 0 || movement.y != 0)
+            animator.SetFloat("Magnitude", 1f);
+        else
+            animator.SetFloat("Magnitude", 0f);
+
+        if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Contains("Right"))
         {
             animator.SetBool("wasRight", true);
             animator.SetBool("wasLeft", false);
         }
-        else if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Run_Left")
+        else if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Contains("Left"))
         {
             animator.SetBool("wasRight", false);
             animator.SetBool("wasLeft", true);
@@ -56,7 +60,7 @@ public class Player : MonoBehaviour
             animator.SetBool("damaged", false);
             damageTimer = 25;
         }
-        else
+        else if (animator.GetBool("damaged") == true)
         {
             damageTimer--;
         }
