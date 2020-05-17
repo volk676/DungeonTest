@@ -36,4 +36,21 @@ public class SpikeTrap : MonoBehaviour
             index++;
         }
     }
+
+    /// <summary>
+    /// Sent each frame where another object is within a trigger collider
+    /// attached to this object (2D physics only).
+    /// </summary>
+    /// <param name="other">The other Collider2D involved in this collision.</param>
+    void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Player" && frame > 1)
+        {
+            Player player = other.GetComponent<Player>();
+            if (!player.invuln)
+            {
+                player.damaged(0.5f);
+            }
+        }
+    }
 }

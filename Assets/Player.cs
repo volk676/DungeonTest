@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     public Weapon weapon;
     public Health healthObject;
     private float health = 3f;
-    private bool invuln = false;
+    public bool invuln = false;
     private int invulnTimer = 50;
     private int damageTimer = 25;
 
@@ -32,14 +32,12 @@ public class Player : MonoBehaviour
         doInvuln();
         doDamageAnim();
 
+        //Vector2 move = new Vector2(movement.x, movement.y);
+        //rb.AddRelativeForce(move.normalized * moveSpeed * Time.fixedDeltaTime * 100);
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
-
-        if (movement.x != 0 || movement.y != 0)
-            animator.SetFloat("Magnitude", 1f);
-        else
-            animator.SetFloat("Magnitude", 0f);
+        animator.SetFloat("Magnitude", movement.magnitude);
 
         if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Contains("Right"))
         {
@@ -85,28 +83,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Sent when another object enters a trigger collider attached to this
-    /// object (2D physics only).
-    /// </summary>
-    /// <param name="other">The other Collider2D involved in this collision.</param>
-    void OnTriggerStay2D(Collider2D other)
+    void doHealth(float heartDamage)
     {
-        if (!invuln)
-        {
-            if (other.gameObject.tag == "Trap" && other.gameObject.GetComponent<SpikeTrap>().frame > 1)
-            {
-                doHealth();
-                invuln = true;
-                animator.SetBool("damaged", true);
-            }
-        }
-
-    }
-
-    void doHealth()
-    {
-        health -= 0.5f;
+        health -= heartDamage;
 
         if (health == 0)
             SceneManager.LoadScene("Dungeon");
@@ -121,5 +100,12 @@ public class Player : MonoBehaviour
         {
             healthObject.hearts[checkHealth].sprite = healthObject.heartSprites[2];
         }
+    }
+
+    public void damaged(float heartDamage)
+    {
+        doHealth(heartDamage);
+        invuln = true;
+        animator.SetBool("damaged", true);
     }
 }

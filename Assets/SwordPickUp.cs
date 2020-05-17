@@ -25,8 +25,11 @@ public class SwordPickUp : MonoBehaviour
     /// <param name="other">The other Collider2D involved in this collision.</param>
     void OnTriggerEnter2D(Collider2D other)
     {
-         Weapon weapon = (Weapon)other.transform.GetChild(0).GetComponent(typeof(Weapon));
-         weapon.spriteRenderer.sprite = spriteRenderer.sprite;
-         Destroy(this.gameObject);
+        if (other.tag == "Player")
+        {
+            Weapon weapon = (Weapon)other.transform.GetChild(0).GetComponent(typeof(Weapon));
+            weapon.spriteRenderer.sprite = spriteRenderer.sprite;
+            Destroy(this.gameObject);
+        }
     }
 }

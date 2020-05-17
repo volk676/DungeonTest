@@ -27,13 +27,12 @@ public class Weapon : MonoBehaviour
     void Start()
     {
         ResetPos();
-        player = transform.parent.GetComponent<Player>();
-        animator = player.animator;
+        animator = (Animator)this.GetComponentInParent(typeof(Animator));
     }
 
     private void setSide()
     {
-        if (player.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Contains("Right") && leftFacing)
+        if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Contains("Right") && leftFacing)
         {
             startingZ = 330f;
             attackSpeed = -10f;
@@ -44,7 +43,7 @@ public class Weapon : MonoBehaviour
             leftFacing = false;
             ResetPos();
         }
-        else if (player.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Contains("Left") && rightFacing)
+        else if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Contains("Left") && rightFacing)
         {
             startingZ = 30f;
             endingZ = 170f;
